@@ -16,7 +16,8 @@ public:
     ~MainWindow();
 
 public slots :
-    void start();
+    void regionGrowing();
+    void waterShedSeg();
     void reset();
     void importdcm();
 
@@ -27,6 +28,7 @@ protected :
 private:
     Ui::MainWindow *ui;
     bool regionGrow;
+    bool waterShed;
     bool thereIsPicture;
     bool thereIsSeed;
     QString path;

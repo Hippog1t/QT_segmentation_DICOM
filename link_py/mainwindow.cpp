@@ -15,12 +15,14 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 
     regionGrow = false;
+    waterShed = false;
     thereIsPicture = false;
     thereIsSeed = false;
 
     path = QCoreApplication::applicationDirPath()+"/../..";
 
-    connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(start()));
+    connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(regionGrowing()));
+    connect(ui->lpeButton, SIGNAL(clicked()), this, SLOT(waterShedSeg()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(reset()));
     connect(ui->actionImporter_fichier_dcm, SIGNAL(triggered()), this, SLOT(importdcm()));
 
@@ -33,7 +35,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::start(){
+void MainWindow::regionGrowing(){
+    ui->errors->clear();
     if(!regionGrow && thereIsPicture && thereIsSeed){
         QString cmd_qt = QString("python "+
                                  path
@@ -54,6 +57,10 @@ void MainWindow::start(){
         QPixmap pixmap("../Out/regionGrow.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
+    }
+
+    if(!thereIsSeed){
+        ui->errors->setText("Erreur : Vous devez indiquer une valeur de seed\nCliquez sur l'image");
     }
 }
 
@@ -87,6 +94,28 @@ void MainWindow::importdcm(){
     QPixmap pixmap(path+"/Out/initial.jpg");
     ui->picture->setPixmap(pixmap);
     thereIsPicture = true;
+}
+
+void MainWindow::waterShedSeg(){
+    if(!waterShed && thereIsPicture){
+        QString cmd_qt = QString("python "+
+                                 path
+                                 +"/waterShed.py "+
+                                 filepath+" "+
+                                 path);
+        const char* cmd = cmd_qt.toLocal8Bit().constData();
+        system(cmd);
+        ui->picture->clear();
+        QPixmap pixmap(path+"/Ressources/chargement.jpg");
+        ui->picture->setPixmap(pixmap);
+        waterShed = true;
+    }
+
+    if(waterShed){
+        QPixmap pixmap("../Out/waterShed.jpg");
+        ui->picture->setPixmap(pixmap);
+        ui->picture->show();
+    }
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
