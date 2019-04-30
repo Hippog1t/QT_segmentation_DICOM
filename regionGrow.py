@@ -9,17 +9,15 @@ import SimpleITK as sitk
 import matplotlib.image as mpimg
 import numpy as np
 import sys
-
-filename = "C:/Users/Alexandre/Documents/Projet2I/FinalCode/DATA_dcm/IM-0001-0180-0001.dcm"
-inputFile = filename  
-outFilename = 'C:/Users/Alexandre/Documents/Projet2I/FinalCode/Out/regionGrow_dcm.jpg'
-outputFile = outFilename
-    
-img = sitk.ReadImage(inputFile)
     
 x_seed = int(sys.argv[1])
 y_seed = int(sys.argv[2])
-    
+
+inputFile = sys.argv[3]
+outputFile = sys.argv[4]+"/Out/regionGrow.jpg"
+
+img = sitk.ReadImage(inputFile)
+
 seed = (x_seed,y_seed,0)   
     
 img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)

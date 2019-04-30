@@ -1,8 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMouseEvent>
-#include <QProcess>
+#include <QFileDialog>
 #include <QDir>
+#include <QRegExp>
 #include <windows.h>
 #include <iostream>
 
@@ -15,23 +16,17 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
 
     regionGrow = false;
+    thereIsPicture = false;
+    thereIsSeed = false;
+
     path = QCoreApplication::applicationDirPath()+"/../..";
 
     connect(ui->startButton, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(reset()));
+    connect(ui->actionImporter_fichier_dcm, SIGNAL(triggered()), this, SLOT(importdcm()));
 
-    std::cout << path.toUtf8().constData() << std::endl;
-    QString cmd_qt = QString("python "+
-                             path+
-                             "/init.py "+
-                             path+
-                             "/DATA_dcm/IM-0001-0180-0001.dcm");
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
-
-    QPixmap pixmap(path+"/Out/initial.jpg");
+    QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
-    ui->picture->show();
 }
 
 MainWindow::~MainWindow()
@@ -40,31 +35,55 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::start(){
-    if(!regionGrow){
-        ui->picture->clear();
-        ui->picture->setText(QString("CHARGEMENT..."));
+    if(!regionGrow && thereIsPicture && thereIsSeed){
         QString cmd_qt = QString("python "+
                                  path
                                  +"/regionGrow.py "+
                                  ui->x_pos->text()+" "+
-                                 ui->y_pos->text());
+                                 ui->y_pos->text()+" "+
+                                 filepath+" "+
+                                 path);
         const char* cmd = cmd_qt.toLocal8Bit().constData();
         system(cmd);
+        ui->picture->clear();
+        QPixmap pixmap(path+"/Ressources/chargement.jpg");
+        ui->picture->setPixmap(pixmap);
         regionGrow = true;
     }
 
-    QPixmap pixmap("../Out/regionGrow_dcm.jpg");
-    ui->picture->setPixmap(pixmap);
-    ui->picture->show();
+    if(regionGrow){
+        QPixmap pixmap("../Out/regionGrow.jpg");
+        ui->picture->setPixmap(pixmap);
+        ui->picture->show();
+    }
 }
 
 void MainWindow::reset(){
-    ui->picture->clear();
+    QPixmap pixmap_accueil(path+"/Ressources/accueil.jpg");
+    ui->picture->setPixmap(pixmap_accueil);
     regionGrow = false;
 
-    QPixmap pixmap("../Out/initial.jpg");
+    if(thereIsPicture){
+        QPixmap pixmap("../Out/initial.jpg");
+        ui->picture->setPixmap(pixmap);
+        ui->picture->show();
+    }
+}
+
+void MainWindow::importdcm(){
+    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm)"));
+    ui->filepath->setText(filepath);
+
+    QString cmd_qt = QString("python "+
+                             path+
+                             "/init.py "+
+                             filepath);
+    const char* cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
+
+    QPixmap pixmap(path+"/Out/initial.jpg");
     ui->picture->setPixmap(pixmap);
-    ui->picture->show();
+    thereIsPicture = true;
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
@@ -74,10 +93,12 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event){
             ui->x_pos->setNum(point.x());
             ui->y_pos->setNum(point.y());
             regionGrow = false;
+            thereIsSeed = true;
         }
         else{
             ui->x_pos->setText(QString(""));
             ui->y_pos->setText(QString(""));
+            thereIsSeed = false;
         }
     }
 }
