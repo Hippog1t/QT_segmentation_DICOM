@@ -159,26 +159,52 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>290</y>
+      <y>330</y>
       <width>411</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>NAME</string>
+     <string/>
     </property>
    </widget>
    <widget class="QLabel" name="filepath">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>340</y>
+      <y>410</y>
       <width>411</width>
       <height>41</height>
      </rect>
     </property>
     <property name="text">
-     <string>PATH</string>
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>310</y>
+      <width>131</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Nom du fichier :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>390</y>
+      <width>121</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Chemin du fichier :</string>
     </property>
    </widget>
   </widget>

@@ -72,7 +72,10 @@ void MainWindow::reset(){
 
 void MainWindow::importdcm(){
     filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm)"));
+    QFileInfo f(filepath);
+    filename = f.baseName();
     ui->filepath->setText(filepath);
+    ui->filename->setText(filename);
 
     QString cmd_qt = QString("python "+
                              path+
