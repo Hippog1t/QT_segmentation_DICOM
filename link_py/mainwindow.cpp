@@ -7,7 +7,6 @@
 #include <windows.h>
 #include <iostream>
 
-
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -21,7 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     path = QCoreApplication::applicationDirPath()+"/../..";
 
-    connect(ui->startButton, SIGNAL(clicked()), this, SLOT(start()));
+    connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(start()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(reset()));
     connect(ui->actionImporter_fichier_dcm, SIGNAL(triggered()), this, SLOT(importdcm()));
 
@@ -80,7 +79,8 @@ void MainWindow::importdcm(){
     QString cmd_qt = QString("python "+
                              path+
                              "/init.py "+
-                             filepath);
+                             filepath+" "+
+                             path+"/Out/initial.jpg");
     const char* cmd = cmd_qt.toLocal8Bit().constData();
     system(cmd);
 

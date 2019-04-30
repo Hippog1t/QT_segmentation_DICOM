@@ -11,7 +11,7 @@ import numpy as np
 import sys
 
 file = sys.argv[1]
-outfile = 'C:/Users/Alexandre/Documents/Projet2I/FinalCode/Out/initial.jpg'
+outfile = sys.argv[2]
 img = sitk.ReadImage(file)
 img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
 out_img = sitk.GetArrayFromImage(img_255)
