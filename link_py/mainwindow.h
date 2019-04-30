@@ -21,10 +21,12 @@ public slots :
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
+    void closeEvent(QCloseEvent* event);
 
 private:
     Ui::MainWindow *ui;
     bool regionGrow;
+    QString path;
 };
 
 #endif // MAINWINDOW_H
