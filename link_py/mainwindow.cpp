@@ -94,6 +94,9 @@ void MainWindow::importdcm(){
     QPixmap pixmap(path+"/Out/initial.jpg");
     ui->picture->setPixmap(pixmap);
     thereIsPicture = true;
+    regionGrow = false;
+    waterShed = false;
+    thereIsSeed = false;
 }
 
 void MainWindow::waterShedSeg(){
