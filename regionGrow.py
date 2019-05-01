@@ -22,7 +22,7 @@ seed = (x_seed,y_seed,0)
     
 img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
     
-seg_conf = sitk.ConfidenceConnected(img_255,
+seg_conf = sitk.ConfidenceConnected(sitk.BinaryDilate(img_255, 5),
                                     seedList = [seed],
                                     numberOfIterations = 1,
                                     multiplier = 2.5,

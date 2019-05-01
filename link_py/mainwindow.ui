@@ -30,7 +30,7 @@
     <property name="geometry">
      <rect>
       <x>470</x>
-      <y>10</y>
+      <y>30</y>
       <width>512</width>
       <height>512</height>
      </rect>
@@ -250,14 +250,6 @@
     <addaction name="actionImporter_fichier_dcm"/>
    </widget>
    <addaction name="menuFichiers"/>
-  </widget>
-  <widget class="QToolBar" name="mainToolBar">
-   <attribute name="toolBarArea">
-    <enum>TopToolBarArea</enum>
-   </attribute>
-   <attribute name="toolBarBreak">
-    <bool>false</bool>
-   </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionImporter_fichier_dcm">

@@ -77,7 +77,7 @@ void MainWindow::reset(){
 }
 
 void MainWindow::importdcm(){
-    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm)"));
+    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm);;Images (*.dcm *.jpg *.png)"));
     QFileInfo f(filepath);
     filename = f.baseName();
     ui->filepath->setText(filepath);
@@ -124,9 +124,9 @@ void MainWindow::waterShedSeg(){
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton){
         QPoint point = ui->picture->mapFromParent(event->pos());
-        if(point.x()<=512 && point.x()>=0 && point.y()<=512 && point.y()>=0){
+        if(point.x()<=512 && point.x()>=0 && point.y()<=532 && point.y()>=20){ //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y...
             ui->x_pos->setNum(point.x());
-            ui->y_pos->setNum(point.y());
+            ui->y_pos->setNum(point.y()-20);
             regionGrow = false;
             thereIsSeed = true;
         }
