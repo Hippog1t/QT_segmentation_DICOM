@@ -28,6 +28,17 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
+
+    QFont ourFont("Calibri", 12, false);
+    this->setFont(ourFont);
+
+    ui->x_pos->setStyleSheet("QLabel { background-color : white; color : black;}");
+    ui->y_pos->setStyleSheet("QLabel { background-color : white; color : black; }");
+    ui->filename->setStyleSheet("QLabel { background-color : white; color : black; }");
+    ui->filepath->setStyleSheet("QLabel { background-color : white; color : black; }");
+
+    ui->currentfile->setStyleSheet("QLabel { text-decoration : underline;}");
+    ui->seed->setStyleSheet("QLabel { text-decoration : underline;}");
 }
 
 MainWindow::~MainWindow()

@@ -56,8 +56,8 @@
      <rect>
       <x>19</x>
       <y>70</y>
-      <width>241</width>
-      <height>25</height>
+      <width>261</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -67,10 +67,10 @@
    <widget class="QPushButton" name="clearButton">
     <property name="geometry">
      <rect>
-      <x>19</x>
-      <y>110</y>
-      <width>241</width>
-      <height>25</height>
+      <x>20</x>
+      <y>210</y>
+      <width>261</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -81,7 +81,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>180</y>
+      <y>150</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -94,7 +94,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>210</y>
+      <y>170</y>
       <width>55</width>
       <height>16</height>
      </rect>
@@ -107,7 +107,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>180</y>
+      <y>150</y>
       <width>55</width>
       <height>20</height>
      </rect>
@@ -120,7 +120,7 @@
     <property name="geometry">
      <rect>
       <x>70</x>
-      <y>210</y>
+      <y>170</y>
       <width>55</width>
       <height>21</height>
      </rect>
@@ -133,13 +133,13 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>150</y>
+      <y>110</y>
       <width>231</width>
-      <height>16</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>Seed Position : </string>
+     <string>Seed Position</string>
     </property>
    </widget>
    <widget class="QLabel" name="currentfile">
@@ -152,14 +152,14 @@
      </rect>
     </property>
     <property name="text">
-     <string>Current File : </string>
+     <string>Current File</string>
     </property>
    </widget>
    <widget class="QLabel" name="filename">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>330</y>
+      <y>320</y>
       <width>411</width>
       <height>41</height>
      </rect>
@@ -172,7 +172,7 @@
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>410</y>
+      <y>390</y>
       <width>411</width>
       <height>41</height>
      </rect>
@@ -181,26 +181,26 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="nomfichier">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>310</y>
-      <width>131</width>
-      <height>16</height>
+      <y>300</y>
+      <width>271</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>Nom du fichier :</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_2">
+   <widget class="QLabel" name="cheminfichier">
     <property name="geometry">
      <rect>
       <x>30</x>
-      <y>390</y>
-      <width>121</width>
-      <height>16</height>
+      <y>370</y>
+      <width>271</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
@@ -212,8 +212,8 @@
      <rect>
       <x>20</x>
       <y>30</y>
-      <width>241</width>
-      <height>25</height>
+      <width>261</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -223,8 +223,8 @@
    <widget class="QLabel" name="errors">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>470</y>
+      <x>20</x>
+      <y>490</y>
       <width>411</width>
       <height>41</height>
      </rect>
@@ -240,7 +240,7 @@
      <x>0</x>
      <y>0</y>
      <width>1000</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichiers">
