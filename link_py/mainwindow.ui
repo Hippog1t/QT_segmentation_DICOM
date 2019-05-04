@@ -233,13 +233,13 @@
      <string/>
     </property>
    </widget>
-   <widget class="QTreeWidget" name="header">
+   <widget class="QTreeWidget" name="headerView">
     <property name="geometry">
      <rect>
       <x>1010</x>
       <y>30</y>
       <width>361</width>
-      <height>501</height>
+      <height>511</height>
      </rect>
     </property>
     <column>

@@ -3,7 +3,7 @@
 #include <QMouseEvent>
 #include <QFileDialog>
 #include <QDir>
-#include <QRegExp>
+#include <QTextStream>
 #include <windows.h>
 #include <iostream>
 
@@ -102,12 +102,37 @@ void MainWindow::importdcm(){
     const char* cmd = cmd_qt.toLocal8Bit().constData();
     system(cmd);
 
-    QPixmap pixmap(path+"/Out/initial.jpg");
-    ui->picture->setPixmap(pixmap);
+    QString cmd_qt2 = QString("python "+
+                     path+
+                     "/extractHeader.py "+
+                     filepath+" "+
+                     path);
+
+    const char * cmd2 = cmd_qt2.toLocal8Bit().constData();
+    system(cmd2);
+
     thereIsPicture = true;
     regionGrow = false;
     waterShed = false;
     thereIsSeed = false;
+
+    QPixmap pixmap(path+"/Out/initial.jpg");
+    ui->picture->setPixmap(pixmap);
+
+    QFile header(QString(path+"/Out/dicomheader.txt"));
+    header.open(QIODevice::ReadOnly);
+    QTextStream in(&header);
+
+    QString line = in.readLine();
+    while(!line.isNull()){
+        QTreeWidgetItem * item = new QTreeWidgetItem(ui->headerView);
+        item->setText(0, line);
+        line = in.readLine();
+        item->setText(1, line);
+        ui->headerView->addTopLevelItem(item);
+        line = in.readLine();
+    }
+    header.close();
 }
 
 void MainWindow::waterShedSeg(){
@@ -135,7 +160,7 @@ void MainWindow::waterShedSeg(){
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton){
         QPoint point = ui->picture->mapFromParent(event->pos());
-        if(point.x()<=512 && point.x()>=0 && point.y()<=532 && point.y()>=20){ //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y...
+        if(point.x()<=512 && point.x()>=0 && point.y()<=532 && point.y()>=20){ //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y... D'ou le 532 et 20
             ui->x_pos->setNum(point.x());
             ui->y_pos->setNum(point.y()-20);
             regionGrow = false;
@@ -151,8 +176,8 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event){
 
 void MainWindow::closeEvent(QCloseEvent *event){
     QDir dir(path+"/Out/");
-    dir.setNameFilters(QStringList() << "*.jpg");
-    dir.setFilter(QDir::Files);
+    //dir.setNameFilters(QStringList() << "*.jpg");
+    //dir.setFilter(QDir::Files);
     foreach(QString dirFile, dir.entryList())
     {
         dir.remove(dirFile);
