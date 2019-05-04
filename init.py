@@ -10,11 +10,15 @@ import matplotlib.image as mpimg
 import numpy as np
 import sys
 
-file = sys.argv[1]
-outfile = sys.argv[2]
-img = sitk.ReadImage(file)
-img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
-out_img = sitk.GetArrayFromImage(img_255)
-out_img = np.squeeze(out_img)
+pathOut = sys.argv[1]
 
-mpimg.imsave(outfile, out_img, cmap="gray")
+numberFile = 0
+
+for i in range(2, len(sys.argv)):
+    file = sys.argv[i]
+    img = sitk.ReadImage(file)
+    img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
+    out_img = sitk.GetArrayFromImage(img_255)
+    out_img = np.squeeze(out_img)
+    mpimg.imsave(pathOut+"/Out/initial"+str(numberFile)+".jpg", out_img, cmap="gray")
+    numberFile += 1

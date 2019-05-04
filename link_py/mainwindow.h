@@ -20,10 +20,17 @@ public slots :
     void waterShedSeg();
     void reset();
     void importdcm();
+    void importdir();
+    void goThroughFile();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
     void closeEvent(QCloseEvent* event);
+    void callRegionGrow();
+    void callWaterShed();
+    void callInit(QString pictures);
+    void callExtractHeader(QString picture);
+    void displayHeader();
 
 private:
     Ui::MainWindow *ui;
@@ -32,6 +39,8 @@ private:
     bool thereIsPicture;
     bool thereIsSeed;
     QString path;
+    QStringList files;
+    QString dirpath;
     QString filename;
     QString filepath;
 };

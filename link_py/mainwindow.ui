@@ -223,8 +223,8 @@
    <widget class="QLabel" name="errors">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>490</y>
+      <x>10</x>
+      <y>510</y>
       <width>411</width>
       <height>41</height>
      </rect>
@@ -253,6 +253,45 @@
      </property>
     </column>
    </widget>
+   <widget class="QSlider" name="selectFileDir">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>450</y>
+      <width>261</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="filenumber">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>470</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="totalfiles">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>470</y>
+      <width>61</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -267,14 +306,20 @@
     <property name="title">
      <string>Fichiers</string>
     </property>
-    <addaction name="actionImporter_fichier_dcm"/>
+    <addaction name="action_import_file"/>
+    <addaction name="action_import_dir"/>
    </widget>
    <addaction name="menuFichiers"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionImporter_fichier_dcm">
+  <action name="action_import_file">
    <property name="text">
     <string>Importer fichier .dcm</string>
+   </property>
+  </action>
+  <action name="action_import_dir">
+   <property name="text">
+    <string>Importer un dossier</string>
    </property>
   </action>
  </widget>

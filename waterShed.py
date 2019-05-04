@@ -25,6 +25,6 @@ feature_img = sitk.GradientMagnitudeRecursiveGaussian(img, sigma=2)
 
 ws_img = sitk.MorphologicalWatershed(feature_img, level=4, markWatershedLine=False, fullyConnected=False)
 
-seg = sitk.ConnectedComponent(ws_img!=ws_img[256,256])
-final_img = sitk.LabelOverlay(img, seg)
+#seg = sitk.ConnectedComponent(ws_img!=ws_img[0,256])
+final_img = sitk.LabelOverlay(img, ws_img)
 mpimg.imsave(outFile, np.squeeze(sitk.GetArrayFromImage(final_img)))

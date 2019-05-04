@@ -24,7 +24,9 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->lpeButton, SIGNAL(clicked()), this, SLOT(waterShedSeg()));
     connect(ui->clearButton, SIGNAL(clicked()), this, SLOT(reset()));
-    connect(ui->actionImporter_fichier_dcm, SIGNAL(triggered()), this, SLOT(importdcm()));
+    connect(ui->action_import_file, SIGNAL(triggered()), this, SLOT(importdcm()));
+    connect(ui->action_import_dir, SIGNAL(triggered()), this, SLOT(importdir()));
+    connect(ui->selectFileDir, SIGNAL(valueChanged(int)), this, SLOT(goThroughFile()));
 
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
@@ -32,10 +34,14 @@ MainWindow::MainWindow(QWidget *parent) :
     QFont ourFont("Calibri", 12, false);
     this->setFont(ourFont);
 
+    ui->selectFileDir->setEnabled(false);
+
     ui->x_pos->setStyleSheet("QLabel { background-color : white; color : black;}");
     ui->y_pos->setStyleSheet("QLabel { background-color : white; color : black; }");
     ui->filename->setStyleSheet("QLabel { background-color : white; color : black; }");
     ui->filepath->setStyleSheet("QLabel { background-color : white; color : black; }");
+    ui->filenumber->setStyleSheet("QLabel { background-color : white; color : black; }");
+    ui->totalfiles->setStyleSheet("QLabel { background-color : white; color : black; }");
 
     ui->currentfile->setStyleSheet("QLabel { text-decoration : underline;}");
     ui->seed->setStyleSheet("QLabel { text-decoration : underline;}");
@@ -46,18 +52,97 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::importdir(){
+    dirpath = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "C:/", QFileDialog::ShowDirsOnly);
+    QDir dir = QDir(dirpath);
+    if(dir.exists()){
+        ui->picture->setPixmap(QPixmap(path+"/Ressources/chargement.jpg"));
+        files = dir.entryList(QStringList() << "*.dcm", QDir::Files);
+
+        ui->selectFileDir->setRange(0, files.length()-1);
+        ui->selectFileDir->setTickInterval(1);
+        ui->selectFileDir->setEnabled(true);
+        ui->filenumber->setNum(1);
+        ui->totalfiles->setText("/ "+QString::number(files.length()));
+
+        QString cmdFiles = QString("");
+        foreach(QString file, files){
+            filepath = dirpath+"/"+file+" ";
+            cmdFiles += filepath;
+        }
+        callInit(cmdFiles);
+
+        int v = ui->selectFileDir->value();
+        filepath = dirpath+"/"+files[0];
+        filename = files[0];
+
+        ui->filepath->setText(filepath);
+        ui->filename->setText(filename);
+
+        QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
+        ui->picture->setPixmap(pixmap);
+        displayHeader();
+
+        thereIsPicture = true;
+        regionGrow = false;
+        waterShed = false;
+        thereIsSeed = false;
+    }
+}
+
+void MainWindow::importdcm(){
+    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm);;Images (*.dcm *.jpg *.png)"));
+    if(QFile(filepath).exists()){
+        QFileInfo f(filepath);
+        filename = f.baseName();
+        ui->filepath->setText(filepath);
+        ui->filename->setText(filename);
+        ui->selectFileDir->setEnabled(false);
+        ui->filenumber->clear();
+        ui->totalfiles->clear();
+
+        callInit(filepath);
+
+        displayHeader();
+
+        thereIsPicture = true;
+        regionGrow = false;
+        waterShed = false;
+        thereIsSeed = false;
+
+        QPixmap pixmap(path+"/Out/initial0.jpg");
+        ui->picture->setPixmap(pixmap);
+    }
+}
+
+void MainWindow::goThroughFile(){
+    int value = ui->selectFileDir->value();
+    ui->filenumber->setNum(value+1);
+    QPixmap pixmap(path+"/Out/initial"+QString::number(value)+".jpg");
+    ui->picture->setPixmap(pixmap);
+    filename = files[value];
+    filepath = dirpath+"/"+filename;
+    ui->filename->setText(filename);
+    ui->filepath->setText(filepath);
+    //displayHeader();
+}
+
+void MainWindow::reset(){
+    QPixmap pixmap_accueil(path+"/Ressources/accueil.jpg");
+    ui->picture->setPixmap(pixmap_accueil);
+    regionGrow = false;
+
+    if(thereIsPicture){
+        QPixmap pixmap("../Out/initial0.jpg");
+        ui->picture->setPixmap(pixmap);
+        ui->picture->show();
+    }
+}
+
 void MainWindow::regionGrowing(){
     ui->errors->clear();
     if(!regionGrow && thereIsPicture && thereIsSeed){
-        QString cmd_qt = QString("python "+
-                                 path
-                                 +"/regionGrow.py "+
-                                 ui->x_pos->text()+" "+
-                                 ui->y_pos->text()+" "+
-                                 filepath+" "+
-                                 path);
-        const char* cmd = cmd_qt.toLocal8Bit().constData();
-        system(cmd);
+        callRegionGrow();
         ui->picture->clear();
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
@@ -75,75 +160,9 @@ void MainWindow::regionGrowing(){
     }
 }
 
-void MainWindow::reset(){
-    QPixmap pixmap_accueil(path+"/Ressources/accueil.jpg");
-    ui->picture->setPixmap(pixmap_accueil);
-    regionGrow = false;
-
-    if(thereIsPicture){
-        QPixmap pixmap("../Out/initial.jpg");
-        ui->picture->setPixmap(pixmap);
-        ui->picture->show();
-    }
-}
-
-void MainWindow::importdcm(){
-    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm);;Images (*.dcm *.jpg *.png)"));
-    QFileInfo f(filepath);
-    filename = f.baseName();
-    ui->filepath->setText(filepath);
-    ui->filename->setText(filename);
-
-    QString cmd_qt = QString("python "+
-                             path+
-                             "/init.py "+
-                             filepath+" "+
-                             path+"/Out/initial.jpg");
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
-
-    QString cmd_qt2 = QString("python "+
-                     path+
-                     "/extractHeader.py "+
-                     filepath+" "+
-                     path);
-
-    const char * cmd2 = cmd_qt2.toLocal8Bit().constData();
-    system(cmd2);
-
-    thereIsPicture = true;
-    regionGrow = false;
-    waterShed = false;
-    thereIsSeed = false;
-
-    QPixmap pixmap(path+"/Out/initial.jpg");
-    ui->picture->setPixmap(pixmap);
-
-    QFile header(QString(path+"/Out/dicomheader.txt"));
-    header.open(QIODevice::ReadOnly);
-    QTextStream in(&header);
-
-    QString line = in.readLine();
-    while(!line.isNull()){
-        QTreeWidgetItem * item = new QTreeWidgetItem(ui->headerView);
-        item->setText(0, line);
-        line = in.readLine();
-        item->setText(1, line);
-        ui->headerView->addTopLevelItem(item);
-        line = in.readLine();
-    }
-    header.close();
-}
-
 void MainWindow::waterShedSeg(){
     if(!waterShed && thereIsPicture){
-        QString cmd_qt = QString("python "+
-                                 path
-                                 +"/waterShed.py "+
-                                 filepath+" "+
-                                 path);
-        const char* cmd = cmd_qt.toLocal8Bit().constData();
-        system(cmd);
+        callWaterShed();
         ui->picture->clear();
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
@@ -176,11 +195,71 @@ void MainWindow::mouseReleaseEvent(QMouseEvent* event){
 
 void MainWindow::closeEvent(QCloseEvent *event){
     QDir dir(path+"/Out/");
-    //dir.setNameFilters(QStringList() << "*.jpg");
-    //dir.setFilter(QDir::Files);
     foreach(QString dirFile, dir.entryList())
     {
         dir.remove(dirFile);
     }
     QWidget::closeEvent(event);
+}
+
+void MainWindow::callInit(QString pictures){
+    QString cmd_qt = QString("python "+
+                             path+
+                             "/init.py "+
+                             path+" "+
+                             pictures);
+    const char* cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
+}
+
+void MainWindow::callExtractHeader(QString picture){
+    QString cmd_qt = QString("python "+
+                     path+
+                     "/extractHeader.py "+
+                     picture+" "+
+                     path);
+    const char * cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
+}
+
+void MainWindow::displayHeader(){
+    ui->headerView->clear();
+    callExtractHeader(filepath);
+
+    QFile header(QString(path+"/Out/dicomheader.txt"));
+    header.open(QIODevice::ReadOnly);
+    QTextStream in(&header);
+
+    QString line = in.readLine();
+    while(!line.isNull()){
+        QTreeWidgetItem * item = new QTreeWidgetItem(ui->headerView);
+        item->setText(0, line);
+        line = in.readLine();
+        item->setText(1, line);
+        ui->headerView->addTopLevelItem(item);
+        line = in.readLine();
+    }
+    header.close();
+}
+
+void MainWindow::callRegionGrow(){
+    QString cmd_qt = QString("python "+
+                             path
+                             +"/regionGrow.py "+
+                             ui->x_pos->text()+" "+
+                             ui->y_pos->text()+" "+
+                             filepath+" "+
+                             path);
+    const char* cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
+}
+
+void MainWindow::callWaterShed(){
+    QString cmd_qt = QString("python "+
+                             path
+                             +"/waterShed.py "+
+                             filepath+" "+
+                             path);
+    const char* cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
 }
