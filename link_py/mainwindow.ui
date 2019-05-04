@@ -308,6 +308,7 @@
     </property>
     <addaction name="action_import_file"/>
     <addaction name="action_import_dir"/>
+    <addaction name="action_sauver"/>
    </widget>
    <addaction name="menuFichiers"/>
   </widget>
@@ -320,6 +321,11 @@
   <action name="action_import_dir">
    <property name="text">
     <string>Importer un dossier</string>
+   </property>
+  </action>
+  <action name="action_sauver">
+   <property name="text">
+    <string>Sauvegarder</string>
    </property>
   </action>
  </widget>

@@ -27,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_import_file, SIGNAL(triggered()), this, SLOT(importdcm()));
     connect(ui->action_import_dir, SIGNAL(triggered()), this, SLOT(importdir()));
     connect(ui->selectFileDir, SIGNAL(valueChanged(int)), this, SLOT(goThroughFile()));
+    connect(ui->action_sauver, SIGNAL(triggered()), this, SLOT(save()));
 
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
@@ -80,6 +81,7 @@ void MainWindow::importdir(){
         ui->filename->setText(filename);
 
         QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
+        //QPixmap pixmap(filepath);
         ui->picture->setPixmap(pixmap);
         displayHeader();
 
@@ -262,4 +264,9 @@ void MainWindow::callWaterShed(){
                              path);
     const char* cmd = cmd_qt.toLocal8Bit().constData();
     system(cmd);
+}
+
+void MainWindow::save(){
+    QString imagePath = QFileDialog::getSaveFileName(this,tr("Save Picture"), "C:/", tr("JPEG (*.jpg *.jpeg)"));
+    ui->picture->grab().save(imagePath);
 }

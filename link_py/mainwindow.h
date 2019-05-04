@@ -22,6 +22,7 @@ public slots :
     void importdcm();
     void importdir();
     void goThroughFile();
+    void save();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
