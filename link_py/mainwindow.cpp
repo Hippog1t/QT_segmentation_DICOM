@@ -43,6 +43,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->filepath->setStyleSheet("QLabel { background-color : white; color : black; }");
     ui->filenumber->setStyleSheet("QLabel { background-color : white; color : black; }");
     ui->totalfiles->setStyleSheet("QLabel { background-color : white; color : black; }");
+    ui->errors->setStyleSheet("QLabel { color : red; }");
 
     ui->currentfile->setStyleSheet("QLabel { text-decoration : underline;}");
     ui->seed->setStyleSheet("QLabel { text-decoration : underline;}");
@@ -81,7 +82,8 @@ void MainWindow::importdir(){
         ui->filename->setText(filename);
 
         QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
-        //QPixmap pixmap(filepath);
+        QSize size = pixmap.size();
+        ui->picture->setFixedSize(size);
         ui->picture->setPixmap(pixmap);
         displayHeader();
 
@@ -113,6 +115,8 @@ void MainWindow::importdcm(){
         thereIsSeed = false;
 
         QPixmap pixmap(path+"/Out/initial0.jpg");
+        QSize size = pixmap.size();
+        ui->picture->setFixedSize(size);
         ui->picture->setPixmap(pixmap);
     }
 }
@@ -181,7 +185,8 @@ void MainWindow::waterShedSeg(){
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton){
         QPoint point = ui->picture->mapFromParent(event->pos());
-        if(point.x()<=512 && point.x()>=0 && point.y()<=532 && point.y()>=20){ //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y... D'ou le 532 et 20
+        if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height()+20 && point.y()>=20){
+            //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y... D'ou le 532 et 20 pour balancer
             ui->x_pos->setNum(point.x());
             ui->y_pos->setNum(point.y()-20);
             regionGrow = false;
