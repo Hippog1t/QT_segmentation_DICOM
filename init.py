@@ -8,17 +8,40 @@ Created on Mon Apr 29 17:14:07 2019
 import SimpleITK as sitk
 import matplotlib.image as mpimg
 import numpy as np
-import sys
+import sys, os
 
-pathOut = sys.argv[1]
+In = sys.argv[1]
+pathOut = sys.argv[2]
+#In = "C:/Users/alexa/Documents/Projet_Segmentation/02-OS"
+#pathOut = "C:/Users/alexa/Documents/Projet_Segmentation/CodingZone"
 
-numberFile = 0
+def sort_dcm(e):
+    badchars = '-img'
+    for i in e:
+        if i.lower() in badchars:
+            e.replace(i,'')
 
-for i in range(2, len(sys.argv)):
-    file = sys.argv[i]
-    img = sitk.ReadImage(file)
-    img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
-    out_img = sitk.GetArrayFromImage(img_255)
-    out_img = np.squeeze(out_img)
-    mpimg.imsave(pathOut+"/Out/initial"+str(numberFile)+".jpg", out_img, cmap="gray")
-    numberFile += 1
+if(os.path.isfile(In)):
+    if(In.lower().endswith('.dcm')):
+        img = sitk.ReadImage(In)
+        img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
+        out_img = sitk.GetArrayFromImage(img_255)
+        out_img = np.squeeze(out_img)
+        mpimg.imsave(pathOut+"/Out/initial0.jpg", out_img, cmap="gray")
+    elif(In.lower().endswith('.jpg', '.png')):
+        mpimg.imsave(pathOut+"/Out/initial0.jpg", In, cmap="gray")
+    
+elif(os.path.isdir(In)):
+    files = os.listdir(In)
+    files.sort(key = sort_dcm)
+    print(files)
+    i = 0
+    for file in files :
+        if(file.lower().endswith('.dcm')):
+            #print(file)
+            img = sitk.ReadImage(In+"/"+file)
+            img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
+            out_img = sitk.GetArrayFromImage(img_255)
+            out_img = np.squeeze(out_img)
+            mpimg.imsave(pathOut+"/Out/initial"+str(i)+".jpg", out_img, cmap="gray")
+            i = i+1

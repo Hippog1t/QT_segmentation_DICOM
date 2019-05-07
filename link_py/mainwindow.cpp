@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    //setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
+    //setWindowFlag(Qt::Window);
 
     regionGrow = false;
     waterShed = false;
@@ -29,11 +30,15 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->selectFileDir, SIGNAL(valueChanged(int)), this, SLOT(goThroughFile()));
     connect(ui->action_sauver, SIGNAL(triggered()), this, SLOT(save()));
 
+    ui->picture->setScaledContents( true );
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
 
-    QFont ourFont("Calibri", 12, false);
-    this->setFont(ourFont);
+    QFont bigFont("Calibri", 16, false);
+    QFont smallFont("Calibri", 11, false);
+    this->setFont(bigFont);
+    ui->filepath->setFont(smallFont);
+    ui->headerView->setFont(smallFont);
 
     ui->selectFileDir->setEnabled(false);
 
@@ -67,23 +72,17 @@ void MainWindow::importdir(){
         ui->filenumber->setNum(1);
         ui->totalfiles->setText("/ "+QString::number(files.length()));
 
-        QString cmdFiles = QString("");
-        foreach(QString file, files){
-            filepath = dirpath+"/"+file+" ";
-            cmdFiles += filepath;
-        }
-        callInit(cmdFiles);
+        callInit(dirpath);
 
         int v = ui->selectFileDir->value();
-        filepath = dirpath+"/"+files[0];
+
         filename = files[0];
+        filepath = dirpath+"/"+filename;
 
         ui->filepath->setText(filepath);
         ui->filename->setText(filename);
 
         QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
-        QSize size = pixmap.size();
-        ui->picture->setFixedSize(size);
         ui->picture->setPixmap(pixmap);
         displayHeader();
 
@@ -115,8 +114,6 @@ void MainWindow::importdcm(){
         thereIsSeed = false;
 
         QPixmap pixmap(path+"/Out/initial0.jpg");
-        QSize size = pixmap.size();
-        ui->picture->setFixedSize(size);
         ui->picture->setPixmap(pixmap);
     }
 }
@@ -139,6 +136,9 @@ void MainWindow::reset(){
     regionGrow = false;
 
     if(thereIsPicture){
+        if(ui->selectFileDir->isEnabled()){
+            ui->selectFileDir->setValue(0);
+        }
         QPixmap pixmap("../Out/initial0.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
@@ -185,8 +185,7 @@ void MainWindow::waterShedSeg(){
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton){
         QPoint point = ui->picture->mapFromParent(event->pos());
-        if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height()+20 && point.y()>=20){
-            //Pour une raison étrange, il y a une différence de 20px à la sortie sur l'axe Y... D'ou le 532 et 20 pour balancer
+        if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height() && point.y()>=0){
             ui->x_pos->setNum(point.x());
             ui->y_pos->setNum(point.y()-20);
             regionGrow = false;
@@ -213,8 +212,8 @@ void MainWindow::callInit(QString pictures){
     QString cmd_qt = QString("python "+
                              path+
                              "/init.py "+
-                             path+" "+
-                             pictures);
+                             pictures+" "+
+                             path);
     const char* cmd = cmd_qt.toLocal8Bit().constData();
     system(cmd);
 }
