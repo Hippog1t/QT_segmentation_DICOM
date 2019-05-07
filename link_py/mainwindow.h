@@ -23,6 +23,8 @@ public slots :
     void importdir();
     void goThroughFile();
     void save();
+    void changeBGColor();
+    void changeTextColor();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
@@ -35,6 +37,8 @@ protected :
 
 private:
     Ui::MainWindow *ui;
+    int picWidth;
+    int picHeight;
     bool regionGrow;
     bool waterShed;
     bool thereIsPicture;
@@ -44,6 +48,8 @@ private:
     QString dirpath;
     QString filename;
     QString filepath;
+    QColor appColor;
+    QColor textColor;
 };
 
 #endif // MAINWINDOW_H

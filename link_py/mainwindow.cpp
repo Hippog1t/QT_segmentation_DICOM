@@ -4,6 +4,7 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QTextStream>
+#include <QColorDialog>
 #include <windows.h>
 #include <iostream>
 
@@ -29,13 +30,18 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_import_dir, SIGNAL(triggered()), this, SLOT(importdir()));
     connect(ui->selectFileDir, SIGNAL(valueChanged(int)), this, SLOT(goThroughFile()));
     connect(ui->action_sauver, SIGNAL(triggered()), this, SLOT(save()));
+    connect(ui->actionChange_Background_Color, SIGNAL(triggered()), this, SLOT(changeBGColor()));
+    connect(ui->actionChange_Text_Color, SIGNAL(triggered()), this, SLOT(changeTextColor()));
 
     ui->picture->setScaledContents( true );
+    //ui->picture->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
 
     QFont bigFont("Calibri", 16, false);
     QFont smallFont("Calibri", 11, false);
+    appColor = Qt::gray;
+    textColor = Qt::black;
     this->setFont(bigFont);
     ui->filepath->setFont(smallFont);
     ui->headerView->setFont(smallFont);
@@ -83,6 +89,8 @@ void MainWindow::importdir(){
         ui->filename->setText(filename);
 
         QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
+        picWidth = pixmap.width();
+        picHeight = pixmap.height();
         ui->picture->setPixmap(pixmap);
         displayHeader();
 
@@ -114,6 +122,9 @@ void MainWindow::importdcm(){
         thereIsSeed = false;
 
         QPixmap pixmap(path+"/Out/initial0.jpg");
+        picWidth = pixmap.width();
+        picHeight = pixmap.height();
+        std::cout<<picWidth<<picHeight<<std::endl;
         ui->picture->setPixmap(pixmap);
     }
 }
@@ -122,6 +133,8 @@ void MainWindow::goThroughFile(){
     int value = ui->selectFileDir->value();
     ui->filenumber->setNum(value+1);
     QPixmap pixmap(path+"/Out/initial"+QString::number(value)+".jpg");
+    picWidth = pixmap.width();
+    picHeight = pixmap.height();
     ui->picture->setPixmap(pixmap);
     filename = files[value];
     filepath = dirpath+"/"+filename;
@@ -134,6 +147,7 @@ void MainWindow::reset(){
     QPixmap pixmap_accueil(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap_accueil);
     regionGrow = false;
+    waterShed = false;
 
     if(thereIsPicture){
         if(ui->selectFileDir->isEnabled()){
@@ -185,9 +199,9 @@ void MainWindow::waterShedSeg(){
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
     if (event->button() == Qt::LeftButton){
         QPoint point = ui->picture->mapFromParent(event->pos());
-        if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height() && point.y()>=0){
-            ui->x_pos->setNum(point.x());
-            ui->y_pos->setNum(point.y()-20);
+        if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height()+15 && point.y()>=15){
+            ui->x_pos->setNum(int(point.x()*picWidth/1024));
+            ui->y_pos->setNum(int(point.y())*picHeight/1024-15);
             regionGrow = false;
             thereIsSeed = true;
         }
@@ -273,4 +287,16 @@ void MainWindow::callWaterShed(){
 void MainWindow::save(){
     QString imagePath = QFileDialog::getSaveFileName(this,tr("Save Picture"), "C:/", tr("JPEG (*.jpg *.jpeg)"));
     ui->picture->grab().save(imagePath);
+}
+
+
+//Note si on effectue les 2 à la suite, le texte perd sa police Calibri 16.
+void MainWindow::changeBGColor(){
+    appColor = QColorDialog::getColor();
+    this->setStyleSheet(QString("color : "+textColor.name()+"; background-color : "+appColor.name()));
+}
+
+void MainWindow::changeTextColor(){
+    textColor = QColorDialog::getColor();
+    this->setStyleSheet(QString("color : "+textColor.name()+"; background-color : "+appColor.name()));
 }

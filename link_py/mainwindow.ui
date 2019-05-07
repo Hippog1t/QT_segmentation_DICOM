@@ -61,7 +61,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Croissance de Région</string>
+     <string>Region Growing Segmentation</string>
     </property>
    </widget>
    <widget class="QPushButton" name="clearButton">
@@ -134,7 +134,7 @@
      <rect>
       <x>14</x>
       <y>202</y>
-      <width>441</width>
+      <width>181</width>
       <height>41</height>
      </rect>
     </property>
@@ -217,16 +217,16 @@
      </rect>
     </property>
     <property name="text">
-     <string>Ligne de Partage des Eaux</string>
+     <string>Watershed Segmentation</string>
     </property>
    </widget>
    <widget class="QLabel" name="errors">
     <property name="geometry">
      <rect>
-      <x>9</x>
-      <y>943</y>
-      <width>16</width>
-      <height>16</height>
+      <x>10</x>
+      <y>950</y>
+      <width>451</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="text">
@@ -304,28 +304,58 @@
    </property>
    <widget class="QMenu" name="menuFichiers">
     <property name="title">
-     <string>Fichiers</string>
+     <string>Files</string>
     </property>
     <addaction name="action_import_file"/>
     <addaction name="action_import_dir"/>
     <addaction name="action_sauver"/>
    </widget>
+   <widget class="QMenu" name="menuOptions">
+    <property name="title">
+     <string>Options</string>
+    </property>
+    <widget class="QMenu" name="menuChange_Color">
+     <property name="title">
+      <string>Change Color</string>
+     </property>
+     <addaction name="actionChange_Background_Color"/>
+     <addaction name="actionChange_Text_Color"/>
+    </widget>
+    <addaction name="actionChange_Language"/>
+    <addaction name="menuChange_Color"/>
+   </widget>
    <addaction name="menuFichiers"/>
+   <addaction name="menuOptions"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_import_file">
    <property name="text">
-    <string>Importer fichier .dcm</string>
+    <string>Import .dcm file</string>
    </property>
   </action>
   <action name="action_import_dir">
    <property name="text">
-    <string>Importer un dossier</string>
+    <string>Import directory</string>
    </property>
   </action>
   <action name="action_sauver">
    <property name="text">
-    <string>Sauvegarder</string>
+    <string>Save</string>
+   </property>
+  </action>
+  <action name="actionChange_Language">
+   <property name="text">
+    <string>Change Language</string>
+   </property>
+  </action>
+  <action name="actionChange_Background_Color">
+   <property name="text">
+    <string>Change Background Color</string>
+   </property>
+  </action>
+  <action name="actionChange_Text_Color">
+   <property name="text">
+    <string>Change Text Color</string>
    </property>
   </action>
  </widget>

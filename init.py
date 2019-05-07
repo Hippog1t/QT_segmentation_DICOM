@@ -9,17 +9,10 @@ import SimpleITK as sitk
 import matplotlib.image as mpimg
 import numpy as np
 import sys, os
+import re
 
 In = sys.argv[1]
 pathOut = sys.argv[2]
-#In = "C:/Users/alexa/Documents/Projet_Segmentation/02-OS"
-#pathOut = "C:/Users/alexa/Documents/Projet_Segmentation/CodingZone"
-
-def sort_dcm(e):
-    badchars = '-img'
-    for i in e:
-        if i.lower() in badchars:
-            e.replace(i,'')
 
 if(os.path.isfile(In)):
     if(In.lower().endswith('.dcm')):
@@ -30,11 +23,12 @@ if(os.path.isfile(In)):
         mpimg.imsave(pathOut+"/Out/initial0.jpg", out_img, cmap="gray")
     elif(In.lower().endswith('.jpg', '.png')):
         mpimg.imsave(pathOut+"/Out/initial0.jpg", In, cmap="gray")
-    
+
 elif(os.path.isdir(In)):
     files = os.listdir(In)
-    files.sort(key = sort_dcm)
+    files.sort(key = lambda s: len(s))
     print(files)
+       
     i = 0
     for file in files :
         if(file.lower().endswith('.dcm')):
