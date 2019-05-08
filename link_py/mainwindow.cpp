@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    //setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
     //setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
     //setWindowFlag(Qt::Window);
 
@@ -151,7 +152,8 @@ void MainWindow::reset(){
 
     if(thereIsPicture){
         if(ui->selectFileDir->isEnabled()){
-            ui->selectFileDir->setValue(0);
+            int v = ui->selectFileDir->value();
+            QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
         }
         QPixmap pixmap("../Out/initial0.jpg");
         ui->picture->setPixmap(pixmap);
@@ -167,6 +169,7 @@ void MainWindow::regionGrowing(){
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
         regionGrow = true;
+        waterShed = false;
     }
 
     if(regionGrow){
@@ -187,6 +190,7 @@ void MainWindow::waterShedSeg(){
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
         waterShed = true;
+        regionGrow = false;
     }
 
     if(waterShed){
@@ -197,7 +201,7 @@ void MainWindow::waterShedSeg(){
 }
 
 void MainWindow::mouseReleaseEvent(QMouseEvent* event){
-    if (event->button() == Qt::LeftButton){
+    if (event->button() == Qt::LeftButton && thereIsPicture){
         QPoint point = ui->picture->mapFromParent(event->pos());
         if(point.x()<=ui->picture->width() && point.x()>=0 && point.y()<=ui->picture->height()+15 && point.y()>=15){
             ui->x_pos->setNum(int(point.x()*picWidth/1024));

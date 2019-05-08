@@ -9,7 +9,6 @@ import SimpleITK as sitk
 import matplotlib.image as mpimg
 import numpy as np
 import sys, os
-import re
 
 In = sys.argv[1]
 pathOut = sys.argv[2]
