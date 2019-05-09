@@ -141,6 +141,8 @@ void MainWindow::goThroughFile(){
     filepath = dirpath+"/"+filename;
     ui->filename->setText(filename);
     ui->filepath->setText(filepath);
+    regionGrow = false;
+    waterShed = false;
     //displayHeader();
 }
 
@@ -169,7 +171,6 @@ void MainWindow::regionGrowing(){
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
         regionGrow = true;
-        waterShed = false;
     }
 
     if(regionGrow){
@@ -190,7 +191,6 @@ void MainWindow::waterShedSeg(){
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
         ui->picture->setPixmap(pixmap);
         waterShed = true;
-        regionGrow = false;
     }
 
     if(waterShed){
