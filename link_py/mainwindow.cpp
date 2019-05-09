@@ -141,6 +141,7 @@ void MainWindow::goThroughFile(){
     filepath = dirpath+"/"+filename;
     ui->filename->setText(filename);
     ui->filepath->setText(filepath);
+    thereIsPicture = true;
     regionGrow = false;
     waterShed = false;
     //displayHeader();
@@ -156,10 +157,12 @@ void MainWindow::reset(){
         if(ui->selectFileDir->isEnabled()){
             int v = ui->selectFileDir->value();
             QPixmap pixmap(path+"/Out/initial"+QString::number(v)+".jpg");
+            ui->picture->setPixmap(pixmap);
         }
-        QPixmap pixmap("../Out/initial0.jpg");
-        ui->picture->setPixmap(pixmap);
-        ui->picture->show();
+        else {
+            QPixmap pixmap("../Out/initial0.jpg");
+            ui->picture->setPixmap(pixmap);
+        }
     }
 }
 
