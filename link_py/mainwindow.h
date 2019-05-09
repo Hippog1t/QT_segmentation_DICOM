@@ -25,6 +25,12 @@ public slots :
     void save();
     void changeBGColor();
     void changeTextColor();
+    void applyhsv();
+    void applyrgb();
+    void applyspectral();
+    void applyblueandred();
+    void applythresholds();
+    void applyprism();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
@@ -34,6 +40,7 @@ protected :
     void callInit(QString pictures);
     void callExtractHeader(QString picture);
     void displayHeader();
+    void applyColormap(QString colormap);
 
 private:
     Ui::MainWindow *ui;

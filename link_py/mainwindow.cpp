@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     thereIsPicture = false;
     thereIsSeed = false;
 
-    path = QCoreApplication::applicationDirPath()+"/../..";
+    path = QCoreApplication::applicationDirPath()+"/..";
 
     connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->lpeButton, SIGNAL(clicked()), this, SLOT(waterShedSeg()));
@@ -33,6 +33,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_sauver, SIGNAL(triggered()), this, SLOT(save()));
     connect(ui->actionChange_Background_Color, SIGNAL(triggered()), this, SLOT(changeBGColor()));
     connect(ui->actionChange_Text_Color, SIGNAL(triggered()), this, SLOT(changeTextColor()));
+    connect(ui->actionHSV, SIGNAL(triggered()), this, SLOT(applyhsv()));
+    connect(ui->actionRGB, SIGNAL(triggered()), this, SLOT(applyrgb()));
+    connect(ui->actionSpectral, SIGNAL(triggered()), this, SLOT(applyspectral()));
+    connect(ui->actionBlue_and_red, SIGNAL(triggered()), this, SLOT(applyblueandred()));
+    connect(ui->actionThresholds, SIGNAL(triggered()), this, SLOT(applythresholds()));
+    connect(ui->actionGreyscale, SIGNAL(triggered()), this, SLOT(reset()));
+    connect(ui->actionPrism, SIGNAL(triggered()), this, SLOT(applyprism()));
+
 
     ui->picture->setScaledContents( true );
     //ui->picture->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
@@ -169,7 +177,7 @@ void MainWindow::reset(){
             ui->picture->setPixmap(pixmap);
         }
         else {
-            QPixmap pixmap("../Out/initial0.jpg");
+            QPixmap pixmap("Out/initial0.jpg");
             ui->picture->setPixmap(pixmap);
         }
     }
@@ -188,7 +196,7 @@ void MainWindow::regionGrowing(){
     }
 
     if(regionGrow){
-        QPixmap pixmap("../Out/regionGrow.jpg");
+        QPixmap pixmap("Out/regionGrow.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
     }
@@ -208,7 +216,7 @@ void MainWindow::waterShedSeg(){
     }
 
     if(waterShed){
-        QPixmap pixmap("../Out/waterShed.jpg");
+        QPixmap pixmap("Out/waterShed.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
     }
@@ -318,4 +326,50 @@ void MainWindow::changeBGColor(){
 void MainWindow::changeTextColor(){
     textColor = QColorDialog::getColor();
     this->setStyleSheet(QString("color : "+textColor.name()+"; background-color : "+appColor.name()));
+}
+
+
+void MainWindow::applyhsv(){
+    applyColormap("hsv");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+
+void MainWindow::applyrgb(){
+    applyColormap("gist_rainbow");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+
+void MainWindow::applyspectral(){
+    applyColormap("nipy_spectral");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+
+void MainWindow::applyblueandred(){
+    applyColormap("seismic");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+void MainWindow::applyprism(){
+    applyColormap("prism");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+void MainWindow::applythresholds(){
+    applyColormap("tab10");
+    QPixmap pixmap("Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+
+void MainWindow::applyColormap(QString colormap){
+    QString cmd_qt = QString("python "+
+                             path
+                             +"/LinearSegmentationDistribution.py "+
+                             filepath+" "+
+                             path+" "+
+                             colormap);
+    const char* cmd = cmd_qt.toLocal8Bit().constData();
+    system(cmd);
 }

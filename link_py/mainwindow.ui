@@ -324,8 +324,21 @@
     <addaction name="actionChange_Language"/>
     <addaction name="menuChange_Color"/>
    </widget>
+   <widget class="QMenu" name="menuColorMaps">
+    <property name="title">
+     <string>Colormaps</string>
+    </property>
+    <addaction name="actionHSV"/>
+    <addaction name="actionRGB"/>
+    <addaction name="actionSpectral"/>
+    <addaction name="actionBlue_and_red"/>
+    <addaction name="actionThresholds"/>
+    <addaction name="actionGreyscale"/>
+    <addaction name="actionPrism"/>
+   </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuOptions"/>
+   <addaction name="menuColorMaps"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_import_file">
@@ -356,6 +369,41 @@
   <action name="actionChange_Text_Color">
    <property name="text">
     <string>Change Text Color</string>
+   </property>
+  </action>
+  <action name="actionHSV">
+   <property name="text">
+    <string>HSV</string>
+   </property>
+  </action>
+  <action name="actionRGB">
+   <property name="text">
+    <string>RGB</string>
+   </property>
+  </action>
+  <action name="actionSpectral">
+   <property name="text">
+    <string>Spectral</string>
+   </property>
+  </action>
+  <action name="actionBlue_and_red">
+   <property name="text">
+    <string>Blue and red</string>
+   </property>
+  </action>
+  <action name="actionThresholds">
+   <property name="text">
+    <string>Thresholds</string>
+   </property>
+  </action>
+  <action name="actionGreyscale">
+   <property name="text">
+    <string>Greyscale</string>
+   </property>
+  </action>
+  <action name="actionPrism">
+   <property name="text">
+    <string>Prism</string>
    </property>
   </action>
  </widget>
