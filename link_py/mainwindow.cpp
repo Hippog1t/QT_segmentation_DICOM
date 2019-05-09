@@ -68,10 +68,21 @@ MainWindow::~MainWindow()
 
 void MainWindow::importdir(){
     dirpath = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "C:/", QFileDialog::ShowDirsOnly);
-    QDir dir = QDir(dirpath);
-    if(dir.exists()){
+    if(QDir(dirpath).exists()){
         ui->picture->setPixmap(QPixmap(path+"/Ressources/chargement.jpg"));
-        files = dir.entryList(QStringList() << "*.dcm", QDir::Files);
+        files.clear();
+        callInit(dirpath);
+
+        QFile dir(QString(path+"/Out/directory.txt"));
+        dir.open(QIODevice::ReadOnly);
+        QTextStream in(&dir);
+
+        QString line = in.readLine();
+        while(!line.isNull()){
+            files.append(QString(line));
+            line = in.readLine();
+        }
+        dir.close();
 
         ui->selectFileDir->setRange(0, files.length()-1);
         ui->selectFileDir->setTickInterval(1);
@@ -79,8 +90,8 @@ void MainWindow::importdir(){
         ui->filenumber->setNum(1);
         ui->totalfiles->setText("/ "+QString::number(files.length()));
 
-        callInit(dirpath);
 
+        ui->selectFileDir->setValue(0);
         int v = ui->selectFileDir->value();
 
         filename = files[0];
@@ -150,8 +161,6 @@ void MainWindow::goThroughFile(){
 void MainWindow::reset(){
     QPixmap pixmap_accueil(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap_accueil);
-    regionGrow = false;
-    waterShed = false;
 
     if(thereIsPicture){
         if(ui->selectFileDir->isEnabled()){
@@ -169,6 +178,8 @@ void MainWindow::reset(){
 void MainWindow::regionGrowing(){
     ui->errors->clear();
     if(!regionGrow && thereIsPicture && thereIsSeed){
+        std::cout<<filename.toUtf8().constData()<<std::endl;
+        std::cout<<filepath.toUtf8().constData()<<std::endl;
         callRegionGrow();
         ui->picture->clear();
         QPixmap pixmap(path+"/Ressources/chargement.jpg");
@@ -277,6 +288,7 @@ void MainWindow::callRegionGrow(){
                              ui->y_pos->text()+" "+
                              filepath+" "+
                              path);
+    std::cout<<filepath.toUtf8().constData()<<std::endl;
     const char* cmd = cmd_qt.toLocal8Bit().constData();
     system(cmd);
 }

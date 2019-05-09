@@ -26,7 +26,12 @@ if(os.path.isfile(In)):
 elif(os.path.isdir(In)):
     files = os.listdir(In)
     files.sort(key = lambda s: len(s))
+    f= open(pathOut+"/Out/directory.txt","w+")
+    for i in files:
+        if(i.lower().endswith('.dcm')):
+            f.write(i+"\n")
     print(files)
+    f.close()
        
     i = 0
     for file in files :
