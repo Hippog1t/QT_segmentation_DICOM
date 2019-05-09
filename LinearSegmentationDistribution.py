@@ -4,7 +4,6 @@ import SimpleITK as sitk
 import matplotlib.image as mpimg
 import numpy as np
 import sys
-import pydicom as dicom
 
 inputFile = sys.argv[1]
 outFile = sys.argv[2]+"/Out/lsd.jpg"

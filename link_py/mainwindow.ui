@@ -81,9 +81,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>260</y>
-      <width>16</width>
-      <height>21</height>
+      <y>240</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -94,9 +94,9 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>310</y>
-      <width>16</width>
-      <height>16</height>
+      <y>280</y>
+      <width>31</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -106,8 +106,8 @@
    <widget class="QLabel" name="x_pos">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>260</y>
+      <x>60</x>
+      <y>240</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -119,8 +119,8 @@
    <widget class="QLabel" name="y_pos">
     <property name="geometry">
      <rect>
-      <x>40</x>
-      <y>310</y>
+      <x>60</x>
+      <y>280</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -314,15 +314,15 @@
     <property name="title">
      <string>Options</string>
     </property>
-    <widget class="QMenu" name="menuChange_Color">
+    <widget class="QMenu" name="menuChange_Theme">
      <property name="title">
-      <string>Change Color</string>
+      <string>Change Theme</string>
      </property>
-     <addaction name="actionChange_Background_Color"/>
-     <addaction name="actionChange_Text_Color"/>
+     <addaction name="action_LightMode"/>
+     <addaction name="action_DarkMode"/>
     </widget>
     <addaction name="actionChange_Language"/>
-    <addaction name="menuChange_Color"/>
+    <addaction name="menuChange_Theme"/>
    </widget>
    <widget class="QMenu" name="menuColorMaps">
     <property name="title">
@@ -361,14 +361,14 @@
     <string>Change Language</string>
    </property>
   </action>
-  <action name="actionChange_Background_Color">
+  <action name="action_LightMode">
    <property name="text">
-    <string>Change Background Color</string>
+    <string>Light Theme</string>
    </property>
   </action>
-  <action name="actionChange_Text_Color">
+  <action name="action_DarkMode">
    <property name="text">
-    <string>Change Text Color</string>
+    <string>Dark Theme</string>
    </property>
   </action>
   <action name="actionHSV">

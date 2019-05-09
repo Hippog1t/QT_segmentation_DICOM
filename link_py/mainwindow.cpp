@@ -22,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent) :
     thereIsPicture = false;
     thereIsSeed = false;
 
-    path = QCoreApplication::applicationDirPath()+"/..";
+    path = QCoreApplication::applicationDirPath()+"/../..";
 
     connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->lpeButton, SIGNAL(clicked()), this, SLOT(waterShedSeg()));
@@ -31,8 +31,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->action_import_dir, SIGNAL(triggered()), this, SLOT(importdir()));
     connect(ui->selectFileDir, SIGNAL(valueChanged(int)), this, SLOT(goThroughFile()));
     connect(ui->action_sauver, SIGNAL(triggered()), this, SLOT(save()));
-    connect(ui->actionChange_Background_Color, SIGNAL(triggered()), this, SLOT(changeBGColor()));
-    connect(ui->actionChange_Text_Color, SIGNAL(triggered()), this, SLOT(changeTextColor()));
+    connect(ui->action_DarkMode, SIGNAL(triggered()), this, SLOT(setDarkTheme()));
+    connect(ui->action_LightMode, SIGNAL(triggered()), this, SLOT(setLightTheme()));
     connect(ui->actionHSV, SIGNAL(triggered()), this, SLOT(applyhsv()));
     connect(ui->actionRGB, SIGNAL(triggered()), this, SLOT(applyrgb()));
     connect(ui->actionSpectral, SIGNAL(triggered()), this, SLOT(applyspectral()));
@@ -47,26 +47,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
 
-    QFont bigFont("Calibri", 16, false);
-    QFont smallFont("Calibri", 11, false);
-    appColor = Qt::gray;
-    textColor = Qt::black;
-    this->setFont(bigFont);
-    ui->filepath->setFont(smallFont);
-    ui->headerView->setFont(smallFont);
-
     ui->selectFileDir->setEnabled(false);
 
-    ui->x_pos->setStyleSheet("QLabel { background-color : white; color : black;}");
-    ui->y_pos->setStyleSheet("QLabel { background-color : white; color : black; }");
-    ui->filename->setStyleSheet("QLabel { background-color : white; color : black; }");
-    ui->filepath->setStyleSheet("QLabel { background-color : white; color : black; }");
-    ui->filenumber->setStyleSheet("QLabel { background-color : white; color : black; }");
-    ui->totalfiles->setStyleSheet("QLabel { background-color : white; color : black; }");
-    ui->errors->setStyleSheet("QLabel { color : red; }");
-
-    ui->currentfile->setStyleSheet("QLabel { text-decoration : underline;}");
-    ui->seed->setStyleSheet("QLabel { text-decoration : underline;}");
+    setLightTheme();
 }
 
 MainWindow::~MainWindow()
@@ -177,7 +160,7 @@ void MainWindow::reset(){
             ui->picture->setPixmap(pixmap);
         }
         else {
-            QPixmap pixmap("Out/initial0.jpg");
+            QPixmap pixmap(path+"/Out/initial0.jpg");
             ui->picture->setPixmap(pixmap);
         }
     }
@@ -196,7 +179,7 @@ void MainWindow::regionGrowing(){
     }
 
     if(regionGrow){
-        QPixmap pixmap("Out/regionGrow.jpg");
+        QPixmap pixmap(path+"/Out/regionGrow.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
     }
@@ -216,7 +199,7 @@ void MainWindow::waterShedSeg(){
     }
 
     if(waterShed){
-        QPixmap pixmap("Out/waterShed.jpg");
+        QPixmap pixmap(path+"/Out/waterShed.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
     }
@@ -316,50 +299,66 @@ void MainWindow::save(){
     ui->picture->grab().save(imagePath);
 }
 
+void MainWindow::setDarkTheme(){
+    QFile qssFile(path+"/Ressources/QTDark.qss");
+    qssFile.open(QFile::ReadOnly);
+    QString qss = QLatin1String(qssFile.readAll());
+    this->setStyleSheet(qss);
 
-//Note si on effectue les 2 à la suite, le texte perd sa police Calibri 16.
-void MainWindow::changeBGColor(){
-    appColor = QColorDialog::getColor();
-    this->setStyleSheet(QString("color : "+textColor.name()+"; background-color : "+appColor.name()));
+    QFont bigFont("Calibri", 16, false);
+    QFont smallFont("Calibri", 11, false);
+    this->setFont(bigFont);
+    ui->filepath->setFont(smallFont);
+    ui->headerView->setFont(smallFont);
+    ui->errors->setFont(QFont("Calibri", 11));
+    ui->errors->setStyleSheet("QLabel { color : red; }");
+
 }
 
-void MainWindow::changeTextColor(){
-    textColor = QColorDialog::getColor();
-    this->setStyleSheet(QString("color : "+textColor.name()+"; background-color : "+appColor.name()));
-}
+void MainWindow::setLightTheme(){
+    this->setStyleSheet("");
 
+    QFont bigFont("Calibri", 16, false);
+    QFont smallFont("Calibri", 11, false);
+    this->setFont(bigFont);
+    ui->filepath->setFont(smallFont);
+    ui->headerView->setFont(smallFont);
+    ui->errors->setFont(QFont("Calibri", 11));
+    ui->errors->setStyleSheet("QLabel { color : red; }");
+
+}
 
 void MainWindow::applyhsv(){
     applyColormap("hsv");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 
 void MainWindow::applyrgb(){
     applyColormap("gist_rainbow");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 
 void MainWindow::applyspectral(){
     applyColormap("nipy_spectral");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 
 void MainWindow::applyblueandred(){
     applyColormap("seismic");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 void MainWindow::applyprism(){
     applyColormap("prism");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 void MainWindow::applythresholds(){
     applyColormap("tab10");
-    QPixmap pixmap("Out/lsd.jpg");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
 

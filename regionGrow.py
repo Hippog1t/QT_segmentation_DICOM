@@ -30,7 +30,6 @@ seg_conf = sitk.ConfidenceConnected(sitk.BinaryDilate(img_255, 1),
                                     initialNeighborhoodRadius = 1,
                                     replaceValue = 1)
 """
-
 seg_conf = sitk.ConnectedThreshold(img, seedList=[seed],
                                   lower=10, upper=10)
 """

@@ -23,8 +23,8 @@ public slots :
     void importdir();
     void goThroughFile();
     void save();
-    void changeBGColor();
-    void changeTextColor();
+    void setDarkTheme();
+    void setLightTheme();
     void applyhsv();
     void applyrgb();
     void applyspectral();
@@ -55,8 +55,6 @@ private:
     QString dirpath;
     QString filename;
     QString filepath;
-    QColor appColor;
-    QColor textColor;
 };
 
 #endif // MAINWINDOW_H
