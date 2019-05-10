@@ -21,7 +21,8 @@ if(os.path.isfile(In)):
         out_img = np.squeeze(out_img)
         mpimg.imsave(pathOut+"/Out/initial0.jpg", out_img, cmap="gray")
     elif(In.lower().endswith('.jpg', '.png')):
-        mpimg.imsave(pathOut+"/Out/initial0.jpg", In, cmap="gray")
+        out_img = mpimg.imread(In)
+        mpimg.imsave(pathOut+"/Out/initial0.jpg", out_img)
 
 elif(os.path.isdir(In)):
     files = os.listdir(In)

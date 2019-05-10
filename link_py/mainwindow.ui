@@ -55,7 +55,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>100</y>
+      <y>220</y>
       <width>451</width>
       <height>71</height>
      </rect>
@@ -68,7 +68,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>350</y>
+      <y>550</y>
       <width>451</width>
       <height>71</height>
      </rect>
@@ -80,8 +80,8 @@
    <widget class="QLabel" name="x">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>240</y>
+      <x>16</x>
+      <y>138</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -93,8 +93,8 @@
    <widget class="QLabel" name="y">
     <property name="geometry">
      <rect>
-      <x>20</x>
-      <y>280</y>
+      <x>16</x>
+      <y>178</y>
       <width>31</width>
       <height>31</height>
      </rect>
@@ -106,8 +106,8 @@
    <widget class="QLabel" name="x_pos">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>240</y>
+      <x>56</x>
+      <y>138</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -119,8 +119,8 @@
    <widget class="QLabel" name="y_pos">
     <property name="geometry">
      <rect>
-      <x>60</x>
-      <y>280</y>
+      <x>56</x>
+      <y>178</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -132,8 +132,8 @@
    <widget class="QLabel" name="seed">
     <property name="geometry">
      <rect>
-      <x>14</x>
-      <y>202</y>
+      <x>10</x>
+      <y>100</y>
       <width>181</width>
       <height>41</height>
      </rect>
@@ -146,9 +146,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>470</y>
+      <y>650</y>
       <width>251</width>
-      <height>41</height>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
@@ -159,7 +159,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>560</y>
+      <y>720</y>
       <width>451</width>
       <height>41</height>
      </rect>
@@ -172,7 +172,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>650</y>
+      <y>810</y>
       <width>451</width>
       <height>51</height>
      </rect>
@@ -185,7 +185,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>520</y>
+      <y>680</y>
       <width>221</width>
       <height>41</height>
      </rect>
@@ -198,7 +198,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>610</y>
+      <y>770</y>
       <width>421</width>
       <height>41</height>
      </rect>
@@ -224,7 +224,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>950</y>
+      <y>940</y>
       <width>451</width>
       <height>71</height>
      </rect>
@@ -257,7 +257,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>710</y>
+      <y>870</y>
       <width>431</width>
       <height>31</height>
      </rect>
@@ -270,7 +270,7 @@
     <property name="geometry">
      <rect>
       <x>130</x>
-      <y>750</y>
+      <y>910</y>
       <width>111</width>
       <height>31</height>
      </rect>
@@ -283,7 +283,7 @@
     <property name="geometry">
      <rect>
       <x>240</x>
-      <y>750</y>
+      <y>910</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -303,6 +303,55 @@
     </property>
     <property name="text">
      <string>Load demonstration file</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="thresholdButton">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>470</y>
+      <width>451</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Thresholding Segmentation</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="enterValue">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>360</y>
+      <width>211</width>
+      <height>41</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="thresholdlabel">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>320</y>
+      <width>221</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Threshold value</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="valueLimits">
+    <property name="geometry">
+     <rect>
+      <x>20</x>
+      <y>410</y>
+      <width>441</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
     </property>
    </widget>
   </widget>

@@ -32,6 +32,8 @@ public slots :
     void applythresholds();
     void applyprism();
     void demonstration();
+    void Thresholding();
+    void changeofValue();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);
@@ -42,6 +44,8 @@ protected :
     void callExtractHeader(QString picture);
     void displayHeader();
     void applyColormap(QString colormap);
+    void callThreshold(QString threshold);
+    void CTorMR();
 
 private:
     Ui::MainWindow *ui;
@@ -51,6 +55,10 @@ private:
     bool waterShed;
     bool thereIsPicture;
     bool thereIsSeed;
+    bool thereIsValue;
+    bool Threshold;
+    bool isCT;
+    bool isMR;
     QString path;
     QStringList files;
     QString dirpath;

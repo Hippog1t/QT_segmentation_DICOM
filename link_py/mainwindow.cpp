@@ -14,16 +14,19 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    //setWindowFlags(windowFlags() | Qt::WindowMinimizeButtonHint);
-    //setWindowFlags(windowFlags() | Qt::WindowStaysOnTopHint);
-    //setWindowFlag(Qt::Window);
 
     regionGrow = false;
     waterShed = false;
+    Threshold = false;
     thereIsPicture = false;
     thereIsSeed = false;
+    thereIsValue = false;
+    isCT = false;
+    isMR = false;
 
-    path = QCoreApplication::applicationDirPath()+"/../..";
+    path = QCoreApplication::applicationDirPath();
+    this->setWindowIcon(QIcon(QPixmap(path+"/Ressources/icone.jpg")));
+    this->setWindowTitle(QString("Medical Image Segmentation - ESME 2019"));
 
     connect(ui->rgButton, SIGNAL(clicked()), this, SLOT(regionGrowing()));
     connect(ui->lpeButton, SIGNAL(clicked()), this, SLOT(waterShedSeg()));
@@ -42,18 +45,20 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionGreyscale, SIGNAL(triggered()), this, SLOT(reset()));
     connect(ui->actionPrism, SIGNAL(triggered()), this, SLOT(applyprism()));
     connect(ui->demo, SIGNAL(clicked()), this, SLOT(demonstration()));
+    connect(ui->thresholdButton, SIGNAL(clicked()), this, SLOT(Thresholding()));
+    connect(ui->enterValue, SIGNAL(textChanged(QString)), this, SLOT(changeofValue()));
 
 
     ui->picture->setScaledContents( true );
-    //ui->picture->setSizePolicy( QSizePolicy::Ignored, QSizePolicy::Ignored );
     QPixmap pixmap(path+"/Ressources/accueil.jpg");
     ui->picture->setPixmap(pixmap);
 
     ui->selectFileDir->setEnabled(false);
+    ui->enterValue->setEnabled(false);
+    ui->actionChange_Language->setEnabled(false);
 
     //setLightTheme();
     setDarkTheme();
-    std::cout<<path.toUtf8().constData()<<std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -104,11 +109,15 @@ void MainWindow::importdir(){
         regionGrow = false;
         waterShed = false;
         thereIsSeed = false;
+        Threshold = false;
+        ui->enterValue->setEnabled(true);
+
+        CTorMR();
     }
 }
 
 void MainWindow::importdcm(){
-    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm);;Images (*.dcm *.jpg *.png)"));
+    filepath = QFileDialog::getOpenFileName(this,tr("Select picture"),"C:/",tr("Dicom Files (*.dcm)"));
     if(QFile(filepath).exists()){
         QFileInfo f(filepath);
         filename = f.baseName();
@@ -126,12 +135,15 @@ void MainWindow::importdcm(){
         regionGrow = false;
         waterShed = false;
         thereIsSeed = false;
+        Threshold = false;
+        ui->enterValue->setEnabled(true);
 
         QPixmap pixmap(path+"/Out/initial0.jpg");
         picWidth = pixmap.width();
         picHeight = pixmap.height();
-        std::cout<<picWidth<<picHeight<<std::endl;
         ui->picture->setPixmap(pixmap);
+
+        CTorMR();
     }
 }
 
@@ -149,7 +161,7 @@ void MainWindow::goThroughFile(){
     thereIsPicture = true;
     regionGrow = false;
     waterShed = false;
-    //displayHeader();
+    Threshold = false;
 }
 
 void MainWindow::reset(){
@@ -172,8 +184,6 @@ void MainWindow::reset(){
 void MainWindow::regionGrowing(){
     ui->errors->clear();
     if(!regionGrow && thereIsPicture && thereIsSeed){
-        std::cout<<filename.toUtf8().constData()<<std::endl;
-        std::cout<<filepath.toUtf8().constData()<<std::endl;
         callRegionGrow();
         regionGrow = true;
     }
@@ -199,6 +209,30 @@ void MainWindow::waterShedSeg(){
         QPixmap pixmap(path+"/Out/waterShed.jpg");
         ui->picture->setPixmap(pixmap);
         ui->picture->show();
+    }
+}
+
+void MainWindow::Thresholding(){
+    ui->errors->clear();
+    if(!ui->enterValue->text().isEmpty()){
+        thereIsValue = true;
+    }
+
+    if(!Threshold && thereIsPicture && thereIsValue){
+        callThreshold(ui->enterValue->text());
+        QPixmap pixmap(path+"/Ressources/chargement.jpg");
+        ui->picture->setPixmap(pixmap);
+        Threshold = true;
+    }
+
+    if(Threshold){
+        QPixmap pixmap(path+"/Out/threshold.jpg");
+        ui->picture->setPixmap(pixmap);
+        ui->picture->show();
+    }
+
+    if(!thereIsValue){
+        ui->errors->setText("Erreur : Vous devez indiquer une valeur de seuillage");
     }
 }
 
@@ -228,24 +262,6 @@ void MainWindow::closeEvent(QCloseEvent *event){
     QWidget::closeEvent(event);
 }
 
-void MainWindow::callInit(QString pictures){
-    QString program = "python";
-    QStringList args;
-    args << path+"/init.py" << pictures << path;
-    QProcess test;
-    test.start(program, args);
-    test.waitForFinished();
-}
-
-void MainWindow::callExtractHeader(QString picture){
-    QString program = "python";
-    QStringList args;
-    args << path+"/extractHeader.py" << picture << path;
-    QProcess test;
-    test.start(program, args);
-    test.waitForFinished();
-}
-
 void MainWindow::displayHeader(){
     ui->headerView->clear();
     callExtractHeader(filepath);
@@ -266,36 +282,12 @@ void MainWindow::displayHeader(){
     header.close();
 }
 
-void MainWindow::callRegionGrow(){
-    QString program = "python";
-    QStringList args;
-    args << path+"/regionGrow.py" << ui->x_pos->text() << ui->y_pos->text() << filepath << path;
-    QProcess test;
-    test.start(program, args);
-    test.waitForFinished();
-}
-
-void MainWindow::callWaterShed(){
-    QString program = "python";
-    QStringList args;
-    args << path+"/waterShed.py" << filepath << path;
-    QProcess test;
-    test.start(program, args);
-    test.waitForFinished();
-}
-
 void MainWindow::save(){
     QString imagePath = QFileDialog::getSaveFileName(this,tr("Save Picture"), "C:/", tr("JPEG (*.jpg *.jpeg)"));
     ui->picture->grab().save(imagePath);
 }
 
 void MainWindow::setDarkTheme(){
-    QFont bigFont("Calibri", 16, false);
-    QFont smallFont("Calibri", 11, false);
-    this->setFont(bigFont);
-    ui->filepath->setFont(smallFont);
-    ui->headerView->setFont(smallFont);
-    ui->errors->setFont(QFont("Calibri", 11));
     ui->errors->setStyleSheet("QLabel { color : red; }");
 
     QFile qssFile(path+"/Ressources/QTDark.qss");
@@ -305,12 +297,6 @@ void MainWindow::setDarkTheme(){
 }
 
 void MainWindow::setLightTheme(){
-    QFont bigFont("Calibri", 16, false);
-    QFont smallFont("Calibri", 11, false);
-    this->setFont(bigFont);
-    ui->filepath->setFont(smallFont);
-    ui->headerView->setFont(smallFont);
-    ui->errors->setFont(QFont("Calibri", 11));
     ui->errors->setStyleSheet("QLabel { color : red; }");
 
     this->setStyleSheet("");
@@ -339,24 +325,17 @@ void MainWindow::applyblueandred(){
     QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
+
 void MainWindow::applyprism(){
     applyColormap("prism");
     QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }
+
 void MainWindow::applythresholds(){
     applyColormap("tab10");
     QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
-}
-
-void MainWindow::applyColormap(QString colormap){
-    QString program = "python";
-    QStringList args;
-    args << path+"/LinearSegmentationDistribution.py" << filepath << path << colormap;
-    QProcess test;
-    test.start(program, args);
-    test.waitForFinished();
 }
 
 void MainWindow::demonstration(){
@@ -370,9 +349,107 @@ void MainWindow::demonstration(){
     regionGrow = false;
     waterShed = false;
     thereIsSeed = false;
+    thereIsValue = false;
+    Threshold = false;
+    ui->enterValue->setEnabled(true);
 
     QPixmap pixmap(path+"/Out/initial0.jpg");
     picWidth = pixmap.width();
     picHeight = pixmap.height();
     ui->picture->setPixmap(pixmap);
+
+    CTorMR();
+}
+
+void MainWindow::CTorMR(){
+    QTreeWidgetItem* a = ui->headerView->findItems(QString("Modality"), Qt::MatchFlag::MatchExactly, 0)[0];
+    QString modality = a->text(1);
+    if(modality == "CT"){
+        ui->valueLimits->setText("Choose a value between -1000 and +3000");
+        isCT = true;
+    }
+
+    if(modality =="MR"){
+        ui->valueLimits->setText("Choose a value between 0 and +6000");
+        isMR = true;
+    }
+}
+
+void MainWindow::changeofValue(){
+    thereIsValue = true;
+    Threshold = false;
+    if(isCT){
+        if(ui->enterValue->text().toInt()> 3000){
+            ui->enterValue->clear();
+            ui->enterValue->setText("3000");
+        }
+        if(ui->enterValue->text().toInt()< -1000){
+            ui->enterValue->clear();
+            ui->enterValue->setText("-1000");
+        }
+    }
+    if(isMR){
+        if(ui->enterValue->text().toInt()> 6000){
+            ui->enterValue->clear();
+            ui->enterValue->setText("6000");
+        }
+        if(ui->enterValue->text().toInt()<0){
+            ui->enterValue->clear();
+            ui->enterValue->setText("0");
+        }
+    }
+}
+
+void MainWindow::callInit(QString pictures){
+    QString program = "python";
+    QStringList args;
+    args << path+"/init.py" << pictures << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::callExtractHeader(QString picture){
+    QString program = "python";
+    QStringList args;
+    args << path+"/extractHeader.py" << picture << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::callRegionGrow(){
+    QString program = "python";
+    QStringList args;
+    args << path+"/regionGrow.py" << ui->x_pos->text() << ui->y_pos->text() << filepath << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::callWaterShed(){
+    QString program = "python";
+    QStringList args;
+    args << path+"/waterShed.py" << filepath << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::applyColormap(QString colormap){
+    QString program = "python";
+    QStringList args;
+    args << path+"/LinearSegmentationDistribution.py" << filepath << path << colormap;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::callThreshold(QString threshold){
+    QString program = "python";
+    QStringList args;
+    args << path+"/threshold.py" << filepath << path << threshold;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
 }

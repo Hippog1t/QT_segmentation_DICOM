@@ -27,15 +27,15 @@ dcmkeys = [["0010|0010", "Patient Name"],
            ["0008|1030", "Study Description"],
            ["0008|103e", "SeriesDescription"],
            ]
-
-img = sitk.ReadImage(file)
-
-f= open(path+"/Out/dicomheader.txt","w+")
-
-for k in img.GetMetaDataKeys():
-    v = img.GetMetaData(k)
-    for i in dcmkeys:
-        if(k == i[0] and v!=""):
-            f.write(i[1]+"\n"+v+"\n")
-
-f.close()
+if(file.lower().endswith('.dcm')):
+    img = sitk.ReadImage(file)
+    
+    f= open(path+"/Out/dicomheader.txt","w+")
+    
+    for k in img.GetMetaDataKeys():
+        v = img.GetMetaData(k)
+        for i in dcmkeys:
+            if(k == i[0] and v!=""):
+                f.write(i[1]+"\n"+v+"\n")
+    
+    f.close()
