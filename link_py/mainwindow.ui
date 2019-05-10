@@ -239,7 +239,7 @@
       <x>1535</x>
       <y>10</y>
       <width>371</width>
-      <height>1011</height>
+      <height>911</height>
      </rect>
     </property>
     <column>
@@ -292,6 +292,19 @@
      <string/>
     </property>
    </widget>
+   <widget class="QPushButton" name="demo">
+    <property name="geometry">
+     <rect>
+      <x>1530</x>
+      <y>930</y>
+      <width>381</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load demonstration file</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -299,7 +312,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>20</height>
+     <height>25</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichiers">

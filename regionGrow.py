@@ -19,7 +19,7 @@ outputFile = sys.argv[4]+"/Out/regionGrow.jpg"
 img = sitk.ReadImage(inputFile)
 
 seed = (x_seed,y_seed,0)   
-    
+
 img_255 = sitk.Cast(sitk.RescaleIntensity(img), sitk.sitkUInt8)
     
 

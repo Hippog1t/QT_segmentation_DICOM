@@ -31,6 +31,7 @@ public slots :
     void applyblueandred();
     void applythresholds();
     void applyprism();
+    void demonstration();
 
 protected :
     void mouseReleaseEvent(QMouseEvent* event);

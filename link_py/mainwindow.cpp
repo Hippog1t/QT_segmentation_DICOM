@@ -7,6 +7,7 @@
 #include <QColorDialog>
 #include <windows.h>
 #include <iostream>
+#include <QProcess>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -40,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionThresholds, SIGNAL(triggered()), this, SLOT(applythresholds()));
     connect(ui->actionGreyscale, SIGNAL(triggered()), this, SLOT(reset()));
     connect(ui->actionPrism, SIGNAL(triggered()), this, SLOT(applyprism()));
+    connect(ui->demo, SIGNAL(clicked()), this, SLOT(demonstration()));
 
 
     ui->picture->setScaledContents( true );
@@ -49,7 +51,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->selectFileDir->setEnabled(false);
 
-    setLightTheme();
+    //setLightTheme();
+    setDarkTheme();
+    std::cout<<path.toUtf8().constData()<<std::endl;
 }
 
 MainWindow::~MainWindow()
@@ -60,7 +64,6 @@ MainWindow::~MainWindow()
 void MainWindow::importdir(){
     dirpath = QFileDialog::getExistingDirectory(this, tr("Select Directory"), "C:/", QFileDialog::ShowDirsOnly);
     if(QDir(dirpath).exists()){
-        ui->picture->setPixmap(QPixmap(path+"/Ressources/chargement.jpg"));
         files.clear();
         callInit(dirpath);
 
@@ -172,9 +175,6 @@ void MainWindow::regionGrowing(){
         std::cout<<filename.toUtf8().constData()<<std::endl;
         std::cout<<filepath.toUtf8().constData()<<std::endl;
         callRegionGrow();
-        ui->picture->clear();
-        QPixmap pixmap(path+"/Ressources/chargement.jpg");
-        ui->picture->setPixmap(pixmap);
         regionGrow = true;
     }
 
@@ -192,9 +192,6 @@ void MainWindow::regionGrowing(){
 void MainWindow::waterShedSeg(){
     if(!waterShed && thereIsPicture){
         callWaterShed();
-        ui->picture->clear();
-        QPixmap pixmap(path+"/Ressources/chargement.jpg");
-        ui->picture->setPixmap(pixmap);
         waterShed = true;
     }
 
@@ -232,23 +229,21 @@ void MainWindow::closeEvent(QCloseEvent *event){
 }
 
 void MainWindow::callInit(QString pictures){
-    QString cmd_qt = QString("python "+
-                             path+
-                             "/init.py "+
-                             pictures+" "+
-                             path);
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
+    QString program = "python";
+    QStringList args;
+    args << path+"/init.py" << pictures << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
 }
 
 void MainWindow::callExtractHeader(QString picture){
-    QString cmd_qt = QString("python "+
-                     path+
-                     "/extractHeader.py "+
-                     picture+" "+
-                     path);
-    const char * cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
+    QString program = "python";
+    QStringList args;
+    args << path+"/extractHeader.py" << picture << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
 }
 
 void MainWindow::displayHeader(){
@@ -256,7 +251,7 @@ void MainWindow::displayHeader(){
     callExtractHeader(filepath);
 
     QFile header(QString(path+"/Out/dicomheader.txt"));
-    header.open(QIODevice::ReadOnly);
+    header.open(QIODevice::ReadWrite);
     QTextStream in(&header);
 
     QString line = in.readLine();
@@ -272,26 +267,21 @@ void MainWindow::displayHeader(){
 }
 
 void MainWindow::callRegionGrow(){
-    QString cmd_qt = QString("python "+
-                             path
-                             +"/regionGrow.py "+
-                             ui->x_pos->text()+" "+
-                             ui->y_pos->text()+" "+
-                             filepath+" "+
-                             path);
-    std::cout<<filepath.toUtf8().constData()<<std::endl;
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
+    QString program = "python";
+    QStringList args;
+    args << path+"/regionGrow.py" << ui->x_pos->text() << ui->y_pos->text() << filepath << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
 }
 
 void MainWindow::callWaterShed(){
-    QString cmd_qt = QString("python "+
-                             path
-                             +"/waterShed.py "+
-                             filepath+" "+
-                             path);
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
+    QString program = "python";
+    QStringList args;
+    args << path+"/waterShed.py" << filepath << path;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
 }
 
 void MainWindow::save(){
@@ -300,24 +290,21 @@ void MainWindow::save(){
 }
 
 void MainWindow::setDarkTheme(){
+    QFont bigFont("Calibri", 16, false);
+    QFont smallFont("Calibri", 11, false);
+    this->setFont(bigFont);
+    ui->filepath->setFont(smallFont);
+    ui->headerView->setFont(smallFont);
+    ui->errors->setFont(QFont("Calibri", 11));
+    ui->errors->setStyleSheet("QLabel { color : red; }");
+
     QFile qssFile(path+"/Ressources/QTDark.qss");
     qssFile.open(QFile::ReadOnly);
     QString qss = QLatin1String(qssFile.readAll());
     this->setStyleSheet(qss);
-
-    QFont bigFont("Calibri", 16, false);
-    QFont smallFont("Calibri", 11, false);
-    this->setFont(bigFont);
-    ui->filepath->setFont(smallFont);
-    ui->headerView->setFont(smallFont);
-    ui->errors->setFont(QFont("Calibri", 11));
-    ui->errors->setStyleSheet("QLabel { color : red; }");
-
 }
 
 void MainWindow::setLightTheme(){
-    this->setStyleSheet("");
-
     QFont bigFont("Calibri", 16, false);
     QFont smallFont("Calibri", 11, false);
     this->setFont(bigFont);
@@ -326,6 +313,7 @@ void MainWindow::setLightTheme(){
     ui->errors->setFont(QFont("Calibri", 11));
     ui->errors->setStyleSheet("QLabel { color : red; }");
 
+    this->setStyleSheet("");
 }
 
 void MainWindow::applyhsv(){
@@ -363,12 +351,28 @@ void MainWindow::applythresholds(){
 }
 
 void MainWindow::applyColormap(QString colormap){
-    QString cmd_qt = QString("python "+
-                             path
-                             +"/LinearSegmentationDistribution.py "+
-                             filepath+" "+
-                             path+" "+
-                             colormap);
-    const char* cmd = cmd_qt.toLocal8Bit().constData();
-    system(cmd);
+    QString program = "python";
+    QStringList args;
+    args << path+"/LinearSegmentationDistribution.py" << filepath << path << colormap;
+    QProcess test;
+    test.start(program, args);
+    test.waitForFinished();
+}
+
+void MainWindow::demonstration(){
+    filepath = path+"/Ressources/demo.dcm";
+    ui->filepath->setText(filepath);
+    ui->filename->setText("demo.dcm");
+    callInit(filepath);
+    displayHeader();
+
+    thereIsPicture = true;
+    regionGrow = false;
+    waterShed = false;
+    thereIsSeed = false;
+
+    QPixmap pixmap(path+"/Out/initial0.jpg");
+    picWidth = pixmap.width();
+    picHeight = pixmap.height();
+    ui->picture->setPixmap(pixmap);
 }

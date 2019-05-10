@@ -1,0 +1,22 @@
+Study Date
+20170228
+Study Time
+144006
+Modality
+CT
+Manufacturer
+GE MEDICAL SYSTEMS
+Institution Name
+G.I.E SCANNER CREIL 
+Study Description
+ANGIO-SCANNER CORONAIRE 
+SeriesDescription
+Coeur Segment + 
+Performing Physician Name
+NIKKHOU^SHAHIN
+Patient ID
+A10000837413
+Patient Birth Date
+19450502
+Protocol Name
+5.69 COEUR SEGMENT  66-74 BPM    IMC < 25 
