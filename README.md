@@ -2,8 +2,8 @@
 Dicom image processing using Qt (5.12.3, plus use Mingw 64 v11) interface and python (3.7) in backend\n
 \n
 Welcome to this project! \n
-If you are reading this with the intention of improoving the project:\n
-  -first of all good luck. DICOM is a dark place where nobody want's to go.\n
+If you are reading this with the intention of using or improving the project:\n
+  -first of all good luck. DICOM is a dark place where nobody wants to go.\n
   -this project is mainly commented, it should make things easier but if you have a problem feel free to contact me. \n
   -You WILL NEED DICOM FILES with the .DCM windows extention. Some of them are lacking the '.dcm' sometimes, run \n
     rn \*.\* \*.dcm \n
