@@ -11,8 +11,8 @@ If you are reading this with the intention of using or improving the project:
   
   -You WILL NEED DICOM FILES with the .DCM windows extention. Some of them are lacking the '.dcm' sometimes, run 
   ```
-    ren \*.\* \*.dcm 
-  ``` 
+    ren *.* *.dcm 
+  ```
     in the command prompt in the folder, it should do the trick.
     
     There should be an example for you to load in the Ressources files
