@@ -13,9 +13,9 @@ If you are reading this with the intention of using or improving the project:
   ```
     ren *.* *.dcm 
   ```
-    in the command prompt in the folder, it should do the trick.
+   in the command prompt in the folder, it should do the trick.
     
-    There should be an example for you to load in the Ressources files
+   There should be an example for you to load in the Ressources files
     
   -You also need to install SimpleITK, matplotlib, pillow with your python version 
   
