@@ -30,6 +30,7 @@ public slots :
     void applyspectral();
     void applyblueandred();
     void applythresholds();
+    void applyRGB2();
     void applyprism();
     void demonstration();
     void Thresholding();

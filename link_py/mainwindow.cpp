@@ -41,6 +41,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->actionRGB, SIGNAL(triggered()), this, SLOT(applyrgb()));
     connect(ui->actionSpectral, SIGNAL(triggered()), this, SLOT(applyspectral()));
     connect(ui->actionBlue_and_red, SIGNAL(triggered()), this, SLOT(applyblueandred()));
+    connect(ui->actionBlue_and_red, SIGNAL(triggered()), this, SLOT(applyRGB2()));
     connect(ui->actionThresholds, SIGNAL(triggered()), this, SLOT(applythresholds()));
     connect(ui->actionGreyscale, SIGNAL(triggered()), this, SLOT(reset()));
     connect(ui->actionPrism, SIGNAL(triggered()), this, SLOT(applyprism()));
@@ -334,6 +335,12 @@ void MainWindow::applyprism(){
 
 void MainWindow::applythresholds(){
     applyColormap("tab10");
+    QPixmap pixmap(path+"/Out/lsd.jpg");
+    ui->picture->setPixmap(pixmap);
+}
+
+void MainWindow::applyRGB2(){
+    applyColormap("gist_ncar");
     QPixmap pixmap(path+"/Out/lsd.jpg");
     ui->picture->setPixmap(pixmap);
 }

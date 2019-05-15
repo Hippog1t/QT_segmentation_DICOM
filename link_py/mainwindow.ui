@@ -361,7 +361,7 @@
      <x>0</x>
      <y>0</y>
      <width>1920</width>
-     <height>25</height>
+     <height>20</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFichiers">
@@ -397,6 +397,7 @@
     <addaction name="actionThresholds"/>
     <addaction name="actionGreyscale"/>
     <addaction name="actionPrism"/>
+    <addaction name="actionRGB2"/>
    </widget>
    <addaction name="menuFichiers"/>
    <addaction name="menuOptions"/>
@@ -466,6 +467,11 @@
   <action name="actionPrism">
    <property name="text">
     <string>Prism</string>
+   </property>
+  </action>
+  <action name="actionRGB2">
+   <property name="text">
+    <string>RGB but better</string>
    </property>
   </action>
  </widget>
