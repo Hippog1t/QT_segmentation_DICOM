@@ -1,5 +1,5 @@
-# QT_segmentation_DICOM\n
-Dicom image processing using Qt (5.12.3, plus use Mingw 64 v11) interface and python (3.7) in backend\n
+# QT_segmentation_DICOM
+Dicom image processing using Qt (5.12.3, plus use Mingw 64 v11) interface and python (3.7) in backend
 
 Welcome to this project!
 
@@ -27,4 +27,4 @@ If you are reading this with the intention of using or improving the project:
   ```
   conda install *stuff*
   ```
-  should work on your python command prompt.\n
+  should work on your python command prompt.
